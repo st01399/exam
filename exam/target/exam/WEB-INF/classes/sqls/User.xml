@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.min.edu.model.IServiceUser">
+
+	<select id="memberList" resultType="MemberDto">
+	SELECT ID, NAME, AUTH , DELFLAG , 
+	<!-- TO_CHAR(REGDATE,'yyyy. mm. dd') AS REGDATE  -->
+		REGDATE
+		FROM "MEMBER" m
+	</select>
+		
+	<insert id="signUpMember" parameterType="MemberDto">
+	INSERT INTO "MEMBER" (ID,PW,NAME,AUTH,DELFLAG,REGDATE)
+		VALUES(#{id},#{pw},#{name},'U','N',SYSDATE)
+	</insert>
+		
+	<select id="idDuplicateCheck" parameterType="java.lang.String" resultType="java.lang.Integer">
+	SELECT COUNT(ID) ID
+		FROM "MEMBER" m 
+			WHERE ID = #{id}
+	</select>
+			
+	<!-- 시큐리티를 안할 때 사용 -->
+	<select id="loginMember" parameterType="java.util.Map" resultType="MemberDto">
+	SELECT ID, NAME, AUTH , REGDATE
+		FROM "MEMBER" m 
+			WHERE ID = #{id} AND PW=#{pw}
+			AND DELFLAG = 'N'
+	</select>
+			
+	<select id="selStringPw" parameterType="java.lang.String" resultType="java.lang.String">
+	SELECT PW
+		FROM "MEMBER" m 
+		WHERE ID=#{id}
+	</select>
+	
+	<select id="enLogin" parameterType="java.util.Map" resultType="MemberDto">
+	SELECT ID, NAME, AUTH , REGDATE
+		FROM "MEMBER" m 
+			WHERE ID = #{id}
+	</select>
+
+</mapper>
